@@ -1,11 +1,8 @@
 package vn.hoidanit.laptopshop.controller.admin;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.ServletContext;
 import vn.hoidanit.laptopshop.domain.User;
-import vn.hoidanit.laptopshop.repository.UserRepository;
 import vn.hoidanit.laptopshop.service.UploadService;
 import vn.hoidanit.laptopshop.service.UserService;
 
@@ -26,10 +22,13 @@ import vn.hoidanit.laptopshop.service.UserService;
 public class UserController {
     private final UserService userService;
     private final UploadService uploadService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, UploadService uploadService, ServletContext servletContext) {
+    public UserController(UserService userService, UploadService uploadService,
+            PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.uploadService = uploadService;
+        this.passwordEncoder = passwordEncoder;
 
     }
 
@@ -54,7 +53,11 @@ public class UserController {
             @RequestParam("WNAVFile") MultipartFile file) {
 
         String avatar = this.uploadService.handleSaveUploadfile(file, "avatar");
-        // this.userService.handleSaveUser(wnav);
+        String hashPassword = this.passwordEncoder.encode(wnav.getPassword());
+        wnav.setAvatar(avatar);
+        wnav.setPassword(hashPassword);
+        wnav.setRole(this.userService.getRoleByName(wnav.getRole().getName()));
+        this.userService.handleSaveUser(wnav);
         return "redirect:/admin/user";
     }
 
@@ -73,7 +76,7 @@ public class UserController {
         return "admin/user/detail";
     }
 
-    @RequestMapping("/admin/user/update/{id}")
+    @GetMapping("/admin/user/update/{id}")
     public String getUpdateUserPage(Model model, @PathVariable long id) {
         User currentUsers = this.userService.getUserById(id);
         model.addAttribute("newUser", currentUsers);
@@ -81,12 +84,22 @@ public class UserController {
     }
 
     @PostMapping(value = "/admin/user/update")
-    public String postUpdateUser(Model model, @ModelAttribute("newUser") User wnav) {
+    public String postUpdateUser(Model model, @ModelAttribute("newUser") User wnav,
+            @RequestParam("WNAVFile") MultipartFile file) {
+
         User currentUsers = this.userService.getUserById(wnav.getId());
+
         if (currentUsers != null) {
+            if (!file.isEmpty()) {
+                String img = this.uploadService.handleSaveUploadfile(file, "avatar");
+                currentUsers.setAvatar(img);
+            }
             currentUsers.setAddress(wnav.getAddress());
             currentUsers.setFullName(wnav.getFullName());
             currentUsers.setPhone(wnav.getPhone());
+            currentUsers.setRole(this.userService.getRoleByName(wnav.getRole().getName()));
+
+            // currentUsers.setAvatar(wnav.getAvatar());
             this.userService.handleSaveUser(currentUsers);
         }
         return "redirect:/admin/user";

@@ -41,6 +41,7 @@
                                                 <tr>
                                                     <th>ID</th>
                                                     <th>Email</th>
+                                                    <th>Role</th>
                                                     <th>Full Name</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -51,6 +52,7 @@
                                                     <tr>
                                                         <th>${user.id}</th>
                                                         <td>${user.email}</td>
+                                                        <td>${user.role.name}</td>
                                                         <td>${user.fullName}</td>
                                                         <td>
                                                             <a href="/admin/user/${user.id}"
