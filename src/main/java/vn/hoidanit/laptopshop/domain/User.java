@@ -38,15 +38,21 @@ public class User {
         this.role = role;
     }
 
-    @NotNull
-    @Email
-    @Email(message = "Email không hợp lệ", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+    public interface CreateGroup {
+    }
+
+    public interface UpdateGroup {
+    }
+
+    @NotNull(groups = { CreateGroup.class })
+    @Email(groups = { CreateGroup.class })
+    @Email(message = "Email không hợp lệ", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", groups = CreateGroup.class)
     private String email;
-    @NotNull
-    @Size(min = 3, message = "Phải nhập hơn 3 kí tự")
+    @NotNull(groups = { CreateGroup.class })
+    @Size(min = 3, message = "Phải nhập hơn 3 kí tự", groups = CreateGroup.class)
     private String password;
-    @NotNull
-    @Size(min = 3, message = "Phải nhập hơn 3 kí tự")
+    @NotNull(groups = { CreateGroup.class, UpdateGroup.class })
+    @Size(min = 3, message = "Phải nhập hơn 3 kí tự", groups = { CreateGroup.class, UpdateGroup.class })
     private String fullName;
 
     private String address;

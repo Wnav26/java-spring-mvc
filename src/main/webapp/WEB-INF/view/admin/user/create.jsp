@@ -54,7 +54,7 @@
                                                     </c:set>
                                                     <label class="form-label">Email:</label>
                                                     <form:input type="email"
-                                                        class="form-control ${not empty errorPassword ? 'is-invalid':''}"
+                                                        class="form-control ${not empty errorEmail ? 'is-invalid':''}"
                                                         path="email" />
                                                     ${errorEmail}
                                                 </div>
@@ -79,7 +79,7 @@
                                                     </c:set>
                                                     <label class="form-label">Full Name:</label>
                                                     <form:input type="text"
-                                                        class=" form-control ${not empty errorPassword ? 'is-invalid':''}"
+                                                        class=" form-control ${not empty errorFullName ? 'is-invalid':''}"
                                                         path="fullName" />
                                                     ${errorFullName}
                                                 </div>
