@@ -41,11 +41,15 @@
                                             <div class="text-center my-3">
                                                 <c:out value="${sessionScope.fullName}" />
                                             </div>
+
                                         </li>
 
                                         <li><a class="dropdown-item" href="/user-detail">Quản lý tài khoản</a></li>
 
                                         <li><a class="dropdown-item" href="/order-history">Lịch sử mua hàng</a></li>
+                                        <c:if test="${sessionScope.role == 'ADMIN'}">
+                                            <li><a class="dropdown-item" href="/admin">Trang quản trị</a></li>
+                                        </c:if>
                                         <li>
                                             <hr class="dropdown-divider">
                                         </li>

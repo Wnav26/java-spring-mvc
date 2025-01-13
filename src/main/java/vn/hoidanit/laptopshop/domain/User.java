@@ -22,15 +22,26 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-
     @OneToMany(mappedBy = "user")
     List<Order> oders;
     @OneToOne(mappedBy = "user")
     private Cart cart;
+    @NotNull(groups = { CreateGroup.class })
+    @Email(groups = { CreateGroup.class })
+    @Email(message = "Email không hợp lệ", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", groups = CreateGroup.class)
+    private String email;
+    @NotNull(groups = { CreateGroup.class })
+    @Size(min = 3, message = "Phải nhập hơn 3 kí tự", groups = CreateGroup.class)
+    private String password;
+    @NotNull(groups = { CreateGroup.class, UpdateGroup.class })
+    @Size(min = 3, message = "Phải nhập hơn 3 kí tự", groups = { CreateGroup.class, UpdateGroup.class })
+    private String fullName;
+    private String address;
+    private String phone;
+    private String avatar;
 
     public Role getRole() {
         return role;
@@ -45,21 +56,6 @@ public class User {
 
     public interface UpdateGroup {
     }
-
-    @NotNull(groups = { CreateGroup.class })
-    @Email(groups = { CreateGroup.class })
-    @Email(message = "Email không hợp lệ", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", groups = CreateGroup.class)
-    private String email;
-    @NotNull(groups = { CreateGroup.class })
-    @Size(min = 3, message = "Phải nhập hơn 3 kí tự", groups = CreateGroup.class)
-    private String password;
-    @NotNull(groups = { CreateGroup.class, UpdateGroup.class })
-    @Size(min = 3, message = "Phải nhập hơn 3 kí tự", groups = { CreateGroup.class, UpdateGroup.class })
-    private String fullName;
-
-    private String address;
-    private String phone;
-    private String avatar;
 
     public long getId() {
         return id;
